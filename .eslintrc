@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "parser": "@typescript-eslint/parser"
+  },
+  // "plugins": ["@typescript-eslint"],
+  "extends": ["plugin:vue/essential", "plugin:vue/recommended", "eslint:recommended", "@unocss", "@vue/typescript/recommended", "@vue/prettier", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+  "rules": {
+    "vue/attribute-hyphenation": "warn",
+    "vue/multi-word-component-names": "off",
+    "vue/no-v-html": "off",
+    "vue/no-multiple-template-root": "off",
+    "no-useless-escape": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "vue/no-v-model-argument": "off",
+    "no-var": 1,
+    "prettier/prettier": [
+      "warn",
+      {
+        "endOfLine": "auto"
+      },
+      { "usePrettierrc": true }
+    ]
+  }
+}

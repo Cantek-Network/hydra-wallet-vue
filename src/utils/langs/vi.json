@@ -1,0 +1,42 @@
+{
+    "English": "Tiếng Anh",
+    "Vietnamese": "Tiếng Việt",
+    "#": "#",
+    "breadscrumb": {
+        "tasks": "Công việc",
+        "contact": "Liên hệ"
+    },
+    "MainSidebar": {
+        "Dashboard": "Dashboard",
+        "Opportunity": "Cơ hội",
+        "Contacts": "Liên hệ",
+        "Appointment": "Lịch hẹn",
+        "Orders": "Đơn hàng",
+        "Customers": "Khách hàng",
+        "Report": "Báo cáo",
+        "Revenue": "Doanh thu",
+        "KPI": "KPI",
+        "Dialogs": "Cuộc gọi",
+        "Products": "Sản phẩm",
+        "Categories": "Danh mục",
+        "List": "Danh sách",
+        "Management": "Quản lý",
+        "Users": "Người dùng",
+        "Groups": "Nhóm",
+        "Roles": "Quyền",
+        "Settings": "Cài đặt",
+        "Auto_config": "Cấu hình tự động",
+        "Services": "Dịch vụ",
+        "Tasks": "Quản lý công việc"
+    },
+    "FilterBar": {
+        "filter": "Lọc",
+        "watch_fields": "Xem cột"
+    },
+    "PopupSelectColumn": {
+        "title": "Chọn các trường hiển thị",
+        "select_all": "Chọn tất cả",
+        "submit": "Áp dụng",
+        "cancel_text": "Hủy"
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "English": "English",
+    "Vietnamese": "Vietnamese",
+    "#": "#",
+    "breadscrumb": {
+        "tasks": "Tasks",
+        "contact": "Contacts"
+    },
+    "MainSidebar": {
+        "Dashboard": "Dashboard",
+        "Opportunity": "Opportunity",
+        "Contacts": "Contacts",
+        "Appointment": "Appointment",
+        "Orders": "Orders",
+        "Customers": "Customers",
+        "Report": "Report",
+        "Revenue": "Revenue",
+        "KPI": "KPI",
+        "Dialogs": "Dialogs",
+        "Products": "Products",
+        "Categories": "Categories",
+        "List": "List",
+        "Management": "Management",
+        "Users": "Users",
+        "Groups": "Groups",
+        "Roles": "Roles",
+        "Settings": "Settings",
+        "Auto_config": "Auto config",
+        "Services": "Services",
+        "Tasks": "Tasks"
+    },
+    "FilterBar": {
+        "filter": "Filter",
+        "watch_fields": "Watch Fields"
+    },
+    "PopupSelectColumn": {
+        "title": "Select visible columns",
+        "select_all": "Select all",
+        "submit": "Apply",
+        "cancel_text": "Cancel"
+    }
+}

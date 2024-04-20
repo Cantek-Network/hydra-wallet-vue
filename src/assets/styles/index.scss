@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,500;1,500&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap');
+
+@import './base/index';
+@import './base/scrollbar';
+
+html {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+}
+body {
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #42545e;
+  font-weight: 500;
+  line-height: 1.7;
+}
+img.avatar {
+  position: relative;
+}
+img.avatar:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: url('/assets/images/avatar-default.png');
+  background-size: cover;
+}
