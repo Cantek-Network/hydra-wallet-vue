@@ -3,10 +3,10 @@
   import { formatId } from '@/composables/useFormat'
 
   const steps = ['SEED_PHRASE', 'SELECT_ACCOUNT']
-  const step = ref<'SEED_PHRASE' | 'SELECT_ACCOUNT'>('SELECT_ACCOUNT')
+  const step = ref<'SEED_PHRASE' | 'SELECT_ACCOUNT'>('SEED_PHRASE')
 
   const form = reactive({
-    passphrase: ''
+    mnemonic: ''
   })
 
   const accounts = ref([
@@ -46,6 +46,20 @@
       //   loading.value = false
     }
   }
+
+  function importAccount() {
+    console.log('Import account')
+  }
+
+  function handleImportByMnemonic() {
+    // validate mnemonic
+    if (form.mnemonic) {
+      const walletAddress = useWalletCore().getEnterpriseAddressByMnemonic(form.mnemonic).to_address().to_bech32()
+
+      step.value = 'SELECT_ACCOUNT'
+    }
+  }
+
 </script>
 
 <template>
@@ -53,7 +67,7 @@
     <div class="flex flex-col" v-if="step === 'SEED_PHRASE'">
       <div class="mb-6 flex w-full justify-between">
         <a-button type="ghost" class="" size="large" @click="$router.go(-1)">
-          <icon icon="ic:outline-arrow-back" size="20" />
+          <icon icon="ic:outline-arrow-back" height="20" />
         </a-button>
       </div>
       <div class="mb-2">
@@ -61,14 +75,14 @@
         <p class="text-body-1 font-700 text-left">Enter the backup passphrase associated with the account.</p>
       </div>
       <div class="">
-        <a-textarea v-model:value="form.passphrase" placeholder="Seed or private key" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
-        <a-button type="primary" class="mt-4 !h-[56px] w-full !rounded-full" size="large" :disabled="!form.passphrase" @click="() => (step = 'SELECT_ACCOUNT')">Continue</a-button>
+          <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
+          <a-button type="primary" class="mt-4 !h-[56px] w-full !rounded-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">Continue</a-button>
       </div>
     </div>
     <div class="flex h-full w-full flex-col" v-if="step === 'SELECT_ACCOUNT'">
       <div class="mb-6 flex w-full justify-between">
         <a-button type="ghost" class="" size="large" @click="$router.go(-1)">
-          <icon icon="ic:outline-arrow-back" size="20" />
+          <icon icon="ic:outline-arrow-back" height="20" />
         </a-button>
       </div>
       <div class="mb-2">
@@ -86,7 +100,7 @@
         >
           <div class="flex items-center">
             <div class="rounded-2 flex h-9 w-9 items-center justify-center" border="1 solid #c7bab8">
-              <icon icon="ic:outline-account-circle" size="20" color="#4d4d4d" />
+              <icon icon="ic:outline-account-circle" height="20" color="#4d4d4d" />
             </div>
             <div class="ml-3">
               <p class="text-body-1 font-700 mb-1 leading-4">{{ formatId(account.accountId, 8, 8) }}</p>
@@ -96,12 +110,13 @@
             </div>
           </div>
           <div class="" v-show="selectedAccount.accountId === account.accountId">
-            <icon icon="ic:outline-check" size="28" color="#4d4d4d" />
+            <icon icon="ic:outline-check" height="28" color="#4d4d4d" />
           </div>
         </div>
       </div>
       <div class="w-full">
         <a-button type="primary" class="!rounded-4 !h-[56px] w-full" size="large" @click="handleLogin()" :loading="loading">Select account</a-button>
+        <a-button type="default" class="!rounded-4 !h-[56px] w-full" size="large" @click="importAccount()">Import</a-button>
       </div>
     </div>
   </div>

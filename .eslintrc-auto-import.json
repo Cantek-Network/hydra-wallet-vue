@@ -288,6 +288,12 @@
     "watchThrottled": true,
     "watchTriggerable": true,
     "watchWithFilter": true,
-    "whenever": true
+    "whenever": true,
+    "createId": true,
+    "formatId": true,
+    "useAuth": true,
+    "useCopyContent": true,
+    "usePopupState": true,
+    "useWalletCore": true
   }
 }

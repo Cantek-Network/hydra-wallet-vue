@@ -10,7 +10,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Home',
-        redirect: 'auth'
+        component: () => import(/* webpackChunkName: "home" */ '@modules/home/views/Home.vue')
+      },
+      {
+        path: '/settings',
+        name: 'Settings',
+        component: () => import(/* webpackChunkName: "home" */ '@modules/home/views/Setting.vue')
       },
       {
         path: '/*',
