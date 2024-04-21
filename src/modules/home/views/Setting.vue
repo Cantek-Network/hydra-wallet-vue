@@ -3,7 +3,6 @@
   const router = useRouter()
 
   function handleLogout() {
-    authen.logout()
     router.push({ name: 'auth' })
   }
 </script>

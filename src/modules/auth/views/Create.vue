@@ -5,10 +5,9 @@
   import { message, type FormProps } from 'ant-design-vue'
 
   import { CHAIN } from '@/constants/chain'
-  import useAuthStore from '../stores'
 
   const walletCore = useWalletCore()
-  const authStore = useAuthStore()
+  const auth = useAuth()
 
   const isBlur = ref(true)
   const formCreate = reactive({
@@ -45,7 +44,7 @@
           },
           signType: 'mnemonic'
         }
-        authStore.registerWalletAccount(wallet)
+        auth.registerWalletAccount(wallet)
 
         message.success('Account created successfully!')
       }, 0)

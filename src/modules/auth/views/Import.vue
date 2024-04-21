@@ -35,7 +35,7 @@
       setTimeout(() => {
         console.log('Create account')
         loading.value = false
-        authen.login(selectedAccount.value, 'access-token')
+        //
         setTimeout(() => {
           router.push('/')
         }, 1000)
@@ -59,7 +59,6 @@
       step.value = 'SELECT_ACCOUNT'
     }
   }
-
 </script>
 
 <template>
@@ -75,8 +74,8 @@
         <p class="text-body-1 font-700 text-left">Enter the backup passphrase associated with the account.</p>
       </div>
       <div class="">
-          <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
-          <a-button type="primary" class="mt-4 !h-[56px] w-full !rounded-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">Continue</a-button>
+        <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
+        <a-button type="primary" class="mt-4 !h-[56px] w-full !rounded-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">Continue</a-button>
       </div>
     </div>
     <div class="flex h-full w-full flex-col" v-if="step === 'SELECT_ACCOUNT'">

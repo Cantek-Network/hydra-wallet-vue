@@ -1,12 +1,6 @@
 <script setup lang="ts">
-  import useAuthStore from '@/modules/auth/stores'
-
-  const authStore = useAuthStore()
+  const auth = useAuth()
   const router = useRouter()
-
-  if (!authStore.walletAccount) {
-    router.push({ name: 'Auth' })
-  }
 
   const isShowQrCode = ref(false)
 
@@ -24,10 +18,16 @@
       currencyIcon: '$Fty'
     }
   ])
+  console.log(auth.walletAccounts.value)
+  if (auth.walletAccounts.value.length) {
+    router.push({ name: 'AuthImport' })
+  } else {
+    router.push({ name: 'Auth' })
+  }
 </script>
 
 <template>
-  <div class="flex h-full w-full flex-col justify-between bg-[#EBDEDC]" v-if="authStore.walletAccount">
+  <div class="flex h-full w-full flex-col justify-between bg-[#EBDEDC]" v-if="auth.walletAccount">
     <div class="h-[56px] flex-shrink-0 bg-[#fcebe9] px-4">
       <div class="flex h-full items-center justify-between">
         <img src="/images/wallet-logo.png" alt="logo" class="w-36px h-36px object-contain" />

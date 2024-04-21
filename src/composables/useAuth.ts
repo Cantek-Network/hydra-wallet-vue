@@ -1,20 +1,43 @@
+import { WalletAccount } from '@/interface/wallet.type'
+import { deleteDB, IDBPDatabase, openDB, } from 'idb'
+
+type MainDbType = {}
+
 export const useAuth = () => {
-  const auth = ref({
-    isLogin: false,
-    userData: null as Record<string, any> | null
-  })
-  const login = (userData: Record<string, any>, token: string) => {
-    auth.value.isLogin = true
-    auth.value.userData = userData
-    // save token to localStorage
-    sessionStorage.setItem('token', token)
+  const mainDbName = 'itsa-preprod'
+  const walletCollection = 'wallets'
+  const metadataCollection = 'metadata'
+
+  const mainDb = ref<IDBPDatabase<MainDbType>>()
+  const walletAccount = ref<WalletAccount | null>(null)
+  const walletAccounts = ref<WalletAccount[]>([])
+
+
+
+  function setCurrentWallet(_walletAccount: WalletAccount) {
+    walletAccount.value = _walletAccount
   }
-  const logout = () => {
-    // logout logic here
-    auth.value.isLogin = false
-    auth.value.userData = null
-    // remove token from localStorage
-    sessionStorage.removeItem('token')
+
+  async function registerWalletAccount(_walletAccount: WalletAccount) {
+    mainDb.value?.add(walletCollection, _walletAccount)
+    await getWalletAccounts()
   }
-  return { login, logout, auth }
+
+  async function getWalletAccounts() {
+    const rs = await mainDb.value?.getAll(walletCollection) as WalletAccount[]
+    walletAccounts.value = rs || []
+  }
+
+  async function init() {
+    mainDb.value = await openDB(mainDbName, 1, {
+      upgrade(database, oldVersion, newVersion, transaction, event) {
+        const walletStore = database.createObjectStore(walletCollection, { keyPath: 'id' })
+      },
+    })
+
+    await getWalletAccounts()
+  }
+  init()
+
+  return { walletAccount, walletAccounts, setCurrentWallet, registerWalletAccount }
 }
