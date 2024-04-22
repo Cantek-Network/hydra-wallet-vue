@@ -5,6 +5,17 @@
   const theme = reactive({
     algorithm: antdTheme.defaultAlgorithm
   })
+
+  const auth = useAuth()
+  const router = useRouter()
+
+  onBeforeMount(() => {
+    if (auth.walletAccounts.value.length) {
+      router.push({ name: 'AuthImport' })
+    } else {
+      router.push({ name: 'Auth' })
+    }
+  })
 </script>
 
 <template>

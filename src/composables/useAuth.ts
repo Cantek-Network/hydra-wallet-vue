@@ -25,6 +25,8 @@ export const useAuth = () => {
 
   async function getWalletAccounts() {
     const rs = await mainDb.value?.getAll(walletCollection) as WalletAccount[]
+    console.log(">>> / file: useAuth.ts:28 / rs:", rs);
+
     walletAccounts.value = rs || []
   }
 

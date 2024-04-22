@@ -1,6 +1,5 @@
 <script setup lang="ts">
   const auth = useAuth()
-  const router = useRouter()
 
   const isShowQrCode = ref(false)
 
@@ -18,12 +17,6 @@
       currencyIcon: '$Fty'
     }
   ])
-  console.log(auth.walletAccounts.value)
-  if (auth.walletAccounts.value.length) {
-    router.push({ name: 'AuthImport' })
-  } else {
-    router.push({ name: 'Auth' })
-  }
 </script>
 
 <template>

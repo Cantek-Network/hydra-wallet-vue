@@ -1,6 +1,6 @@
-// Composables
-
 import { RouteRecordRaw } from 'vue-router'
+
+const auth = useAuth()
 
 const routes: RouteRecordRaw[] = [
   {
@@ -10,6 +10,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Home',
+        beforeEnter: (to, from, next) => {
+          if (!auth.walletAccount.value) {
+            next({ name: 'Auth' })
+          } else {
+            next()
+          }
+        },
         component: () => import(/* webpackChunkName: "home" */ '@modules/home/views/Home.vue')
       },
       {

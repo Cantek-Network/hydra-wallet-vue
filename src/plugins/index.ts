@@ -38,8 +38,8 @@ export function registerPlugins(app: App) {
     routes: [...routes, ...moduleRoutes]
   })
   if (import.meta.env.NODE_ENV !== 'production') {
-    console.log(modules)
-    console.log(i18n.global.messages.value)
+    console.log('[modules]:::', modules)
+    console.log('[i18n]:::', i18n.global.messages.value)
   }
   app.use(i18n)
   app.use(router)
