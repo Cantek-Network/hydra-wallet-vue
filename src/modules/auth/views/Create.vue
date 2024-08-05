@@ -87,8 +87,8 @@
               </template>
             </a-input>
           </a-form-item>
-          <a-form-item label="Wallet address">
-            <p class="text-body-3 font-400 mb-2 text-left">We have created a unique address for you!</p>
+          <a-form-item label="Address">
+            <p class="text-body-2 font-400 mb-2 text-left">We have create a unique HYDRA address for you, which is similar to your telegram nickname.</p>
             <a-input v-model:value="formCreate.enterpriseAddress" placeholder="Wallet address" readonly>
               <template #prefix>
                 <icon icon="ic:outline-account-balance-wallet" height="18" color="#4d4d4d" />
