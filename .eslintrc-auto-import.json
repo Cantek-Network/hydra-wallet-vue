@@ -294,6 +294,7 @@
     "useAuth": true,
     "useCopyContent": true,
     "usePopupState": true,
-    "useWalletCore": true
+    "useWalletCore": true,
+    "useClipboardItems": true
   }
 }

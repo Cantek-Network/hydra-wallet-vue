@@ -1,7 +1,7 @@
+import * as CardanoWasm from '@emurgo/cardano-serialization-lib-browser'
+import axios from 'axios'
 
-
-import { BigNum, Bip32PrivateKey, BaseAddress, StakeCredential, NetworkInfo } from '@emurgo/cardano-serialization-lib-browser'
-import { mnemonicToEntropy, generateMnemonic } from 'bip39'
+import { mnemonicToEntropy, generateMnemonic, entropyToMnemonic, getDefaultWordlist } from 'bip39'
 
 export const useWalletCore = () => {
   // Purpose derivation (See BIP43)
@@ -20,9 +20,9 @@ export const useWalletCore = () => {
     CHIMERIC = 2 // from CIP1852
   }
 
-  function getCip1852Account(mnemonic: string): Bip32PrivateKey {
+  function getCip1852Account(mnemonic: string): CardanoWasm.Bip32PrivateKey {
     const entropy = mnemonicToEntropy(mnemonic)
-    const rootKey = Bip32PrivateKey.from_bip39_entropy(Buffer.from(entropy, 'hex'), Buffer.from(''))
+    const rootKey = CardanoWasm.Bip32PrivateKey.from_bip39_entropy(Buffer.from(entropy, 'hex'), Buffer.from(''))
     return rootKey.derive(harden(Purpose.CIP1852)).derive(harden(CoinTypes.CARDANO)).derive(harden(0)) // account #0
   }
 
@@ -30,44 +30,87 @@ export const useWalletCore = () => {
     return 0x80000000 + num
   }
 
-  function getEnterpriseAddress(account: Bip32PrivateKey): BaseAddress {
+  function getEnterpriseAddress(account: CardanoWasm.Bip32PrivateKey): CardanoWasm.BaseAddress {
     const enterpriseKey = account.derive(ChainDerivation.INTERNAL).derive(0).to_public()
-    const baseAddr = BaseAddress.new(0, StakeCredential.from_keyhash(enterpriseKey.to_raw_key().hash()), StakeCredential.from_keyhash(enterpriseKey.to_raw_key().hash()))
+    const baseAddr = CardanoWasm.BaseAddress.new(
+      0,
+      CardanoWasm.StakeCredential.from_keyhash(enterpriseKey.to_raw_key().hash()),
+      CardanoWasm.StakeCredential.from_keyhash(enterpriseKey.to_raw_key().hash())
+    )
     return baseAddr
   }
 
-  function getEnterpriseAddressByMnemonic(mnemonic: string): BaseAddress {
+  function getEnterpriseAddressByMnemonic(mnemonic: string): CardanoWasm.BaseAddress {
     const account = getCip1852Account(mnemonic)
     return getEnterpriseAddress(account)
   }
 
-
-  function test() {
+  async function test() {
     console.log('useWalletCore::: test')
 
-    const mnemonicTest = 'one select army oil peace mansion trumpet wasp strike chase glow skate'
+    const mnemonicTest = 'dilemma habit spring keen patrol magic tide grass learn flavor glimpse bounce hockey reject ensure'
 
     //
     const cip1852Account = getCip1852Account(mnemonicTest)
     const utxoPubKey = cip1852Account.derive(ChainDerivation.EXTERNAL).derive(0).to_public()
     const stakeKey = cip1852Account.derive(ChainDerivation.CHIMERIC).derive(0).to_public()
 
-    const baseAddr = BaseAddress.new(0, StakeCredential.from_keyhash(utxoPubKey.to_raw_key().hash()), StakeCredential.from_keyhash(stakeKey.to_raw_key().hash()))
+    const baseAddr = CardanoWasm.BaseAddress.new(
+      0,
+      CardanoWasm.StakeCredential.from_keyhash(utxoPubKey.to_raw_key().hash()),
+      CardanoWasm.StakeCredential.from_keyhash(stakeKey.to_raw_key().hash())
+    )
 
     const address = baseAddr.to_address().to_bech32()
     console.log('>>> / file: useWalletCore:50 / address:', address)
 
-    const network = NetworkInfo.testnet()
-    console.log('>>> / file: useWalletCore:43 / network:', network)
+    const network = CardanoWasm.NetworkInfo.mainnet()
+    console.log('>>> / file: useWalletCore:43 / network:', network.network_id())
 
+    // init wallet server
+    try {
+      const cardanoNodeEndpoint = 'https://103.149.170.54:8090/v2'
+      const response = await axios({
+        method: 'get',
+        url: `/v2/network/information`,
+        baseURL: 'http://103.149.170.54:8090',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      console.log('>>> / file: useWalletCore:57 / response:', response)
+    } catch (error) {
+      console.error('>>> / file: useWalletCore:57 / error')
+    }
   }
   test()
+
+  async function createTransaction() {
+    try {
+      // Example usage of Cardano serialization library
+      const txBuilder = CardanoWasm.TransactionBuilder.new({
+        free() {}
+      })
+      // Add inputs, outputs, fees, etc. to the transaction builder
+      // For example, adding an output:
+      // const address = CardanoWasm.Address.from_bech32('addr...');
+      // const amount = CardanoWasm.Value.new(CardanoWasm.BigNum.from_str('1000000'));
+      // txBuilder.add_output(CardanoWasm.TransactionOutput.new(address, amount));
+
+      const txBody = txBuilder.build()
+      const tx = CardanoWasm.Transaction.new(txBody, CardanoWasm.TransactionWitnessSet.new())
+      console.log('Transaction:', tx)
+    } catch (error) {
+      console.error('Error creating transaction:', error)
+    }
+  }
 
   return {
     getCip1852Account,
     generateMnemonic,
     getEnterpriseAddress,
     getEnterpriseAddressByMnemonic,
-    test
+    test,
+    createTransaction
   }
 }

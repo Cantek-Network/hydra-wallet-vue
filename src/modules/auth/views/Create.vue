@@ -61,7 +61,7 @@
 
   onMounted(async () => {
     // generate wallet address
-    formCreate.mnemonic = walletCore.generateMnemonic()
+    formCreate.mnemonic = walletCore.generateMnemonic(160)
     formCreate.enterpriseAddress = walletCore.getEnterpriseAddressByMnemonic(formCreate.mnemonic).to_address().to_bech32()
   })
 </script>
@@ -71,7 +71,7 @@
     <div class="flex h-full flex-col justify-between">
       <div class="">
         <div class="mb-6 flex w-full justify-between">
-          <a-button type="ghost" class="" size="large" @click="$router.go(-1)">
+          <a-button type="ghost" class="" size="large" @click="router.go(-1)">
             <Icon icon="ic:outline-arrow-back" height="20" />
           </a-button>
         </div>
