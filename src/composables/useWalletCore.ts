@@ -69,18 +69,15 @@ export const useWalletCore = () => {
 
     // init wallet server
     try {
-      const cardanoNodeEndpoint = 'https://103.149.170.54:8090/v2'
-      const response = await axios({
-        method: 'get',
-        url: `/v2/network/information`,
-        baseURL: 'http://103.149.170.54:8090',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      const cardanoNodeEndpoint = import.meta.env.VITE_APP_CARDANO_NODE_ENDPOINT
+      if (!cardanoNodeEndpoint) {
+        console.error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
+        throw new Error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
+      }
+      const response = await useAxios().get(`v2/wallets`)
       console.log('>>> / file: useWalletCore:57 / response:', response)
     } catch (error) {
-      console.error('>>> / file: useWalletCore:57 / error')
+      console.error('>>> / file: useWalletCore:57 / error', error)
     }
   }
   test()

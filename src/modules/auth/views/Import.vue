@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import { useAuth } from '@/composables/useAuth'
   import { formatId } from '@/composables/useFormat'
+  import { CHAIN } from '@/constants/chain'
+  import { WalletAccount } from '@/interface/wallet.type'
+  import { message } from 'ant-design-vue'
 
   const steps = ['SEED_PHRASE', 'SELECT_ACCOUNT']
   const step = ref<'SEED_PHRASE' | 'SELECT_ACCOUNT'>('SEED_PHRASE')
@@ -9,22 +12,8 @@
     mnemonic: ''
   })
 
-  const accounts = ref([
-    {
-      accountId: '0x2F1Fe5a0BE48e1f7Ec0BC8beA6045985a0210C96',
-      publicKey: 'ed25519:5ypH9EoQk3NrhGcX6sUavaWFDXvq2h9WezD76wkRrgYK',
-      balance: '0.003',
-      currency: '$Fuel'
-    },
-    {
-      accountId: '0xF02ae5a0BE48e1f7Ec0BC8beA6045985a0D286F',
-      publicKey: 'ed25519:5ypH9EoQk3NrhGcX6sUavaWFDXvq2h9WezD76wkRrgYK',
-      balance: '0.009',
-      currency: '$Fuel'
-    }
-  ])
+  const { walletAccount, walletAccounts, setCurrentWallet } = useAuth()
 
-  const selectedAccount = ref(accounts.value[0])
   const loading = ref(false)
   const authen = useAuth()
   const router = useRouter()
@@ -54,9 +43,36 @@
   function handleImportByMnemonic() {
     // validate mnemonic
     if (form.mnemonic) {
-      const walletAddress = useWalletCore().getEnterpriseAddressByMnemonic(form.mnemonic).to_address().to_bech32()
+      try {
+        const walletAddress = useWalletCore().getEnterpriseAddressByMnemonic(form.mnemonic).to_address().to_bech32()
+        console.log('>>> / file: Import.vue:60 / walletAddress:', walletAddress)
 
-      step.value = 'SELECT_ACCOUNT'
+        // check if account exists
+        const existWalletAddess = walletAccounts.findIndex(el => el.enterpriseAddress === walletAddress)
+        if (existWalletAddess !== -1) {
+          setCurrentWallet(walletAccounts[existWalletAddess])
+        } else {
+          const wallet: WalletAccount = {
+            id: new Date().getTime().toString(),
+            enterpriseAddress: walletAddress,
+            networkId: CHAIN,
+            rootKey: {
+              prv: '',
+              pub: '',
+              v: '1'
+            },
+            signType: 'mnemonic'
+          }
+          setCurrentWallet(wallet)
+        }
+        console.log('Go to Home page')
+        router.replace({ name: 'Home' })
+      } catch (error: any) {
+        console.log(error.message)
+        if (error.message === 'Invalid mnemonic') {
+          message.error('Invalid Seed Phrase', 2)
+        }
+      }
     }
   }
 </script>
@@ -78,7 +94,7 @@
         <a-button type="primary" class="mt-4 !h-[56px] w-full !rounded-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">Continue</a-button>
       </div>
     </div>
-    <div class="flex h-full w-full flex-col" v-if="step === 'SELECT_ACCOUNT'">
+    <!-- <div class="flex h-full w-full flex-col" v-if="step === 'SELECT_ACCOUNT'">
       <div class="mb-6 flex w-full justify-between">
         <a-button type="ghost" class="" size="large" @click="$router.go(-1)">
           <icon icon="ic:outline-arrow-back" height="20" />
@@ -117,6 +133,6 @@
         <a-button type="primary" class="!rounded-4 !h-[56px] w-full" size="large" @click="handleLogin()" :loading="loading">Select account</a-button>
         <a-button type="default" class="!rounded-4 !h-[56px] w-full" size="large" @click="importAccount()">Import</a-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>

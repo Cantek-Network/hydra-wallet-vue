@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  const auth = useAuth()
+  import { formatId } from '@/utils/format'
+  const { walletAccount } = useAuth()
 
   const isShowQrCode = ref(false)
 
@@ -17,10 +18,15 @@
       currencyIcon: '$Fty'
     }
   ])
+
+  onMounted(() => {
+    //
+    console.log('Home page mounted')
+  })
 </script>
 
 <template>
-  <div class="flex h-full w-full flex-col justify-between bg-[#EBDEDC]" v-if="auth.walletAccount">
+  <div class="flex h-full w-full flex-col justify-between bg-[#EBDEDC]" v-if="walletAccount">
     <div class="h-[56px] flex-shrink-0 bg-[#fcebe9] px-4">
       <div class="flex h-full items-center justify-between">
         <img src="/images/wallet-logo.png" alt="logo" class="w-36px h-36px object-contain" />
@@ -35,7 +41,7 @@
       </div>
       <div class="p-4">
         <div class="text-body-3 font-700 mt-2 flex items-center justify-center text-center">
-          {{ formatId('0x2F1Fe5a0BE48e1f7Ec0BC8beA6045985a0210C96', 12, 12) }}
+          {{ formatId(walletAccount.enterpriseAddress, 12, 12) }}
           <span>
             <icon icon="ic:outline-copy-all" height="18" class="ml-2 hover:cursor-pointer" @click="useCopyContent('0x2F1Fe5a0BE48e1f7Ec0BC8beA6045985a0210C96')" />
           </span>

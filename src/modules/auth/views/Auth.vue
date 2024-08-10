@@ -1,9 +1,6 @@
 <script setup lang="ts">
-  import { BrowserWallet, AppWallet } from '@meshsdk/core'
-  import useAuthStore from '../stores'
-
   const walletCore = useWalletCore()
-  const authStore = useAuthStore()
+  const { walletAccounts } = useAuth()
 
   onMounted(async () => {
     //

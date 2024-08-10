@@ -1,7 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
 
-const auth = useAuth()
-
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -10,14 +8,17 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'Home',
+        component: () => import(/* webpackChunkName: "home" */ '@modules/home/views/Home.vue'),
         beforeEnter: (to, from, next) => {
-          if (!auth.walletAccount.value) {
+          const { walletAccount } = useAuth()
+          console.log('Router: walletAccount:', walletAccount)
+          if (!walletAccount) {
+            console.log('redirect to auth')
             next({ name: 'Auth' })
           } else {
             next()
           }
-        },
-        component: () => import(/* webpackChunkName: "home" */ '@modules/home/views/Home.vue')
+        }
       },
       {
         path: '/settings',

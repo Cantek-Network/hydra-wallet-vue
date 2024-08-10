@@ -16,7 +16,6 @@
     mnemonic: ''
   })
   const loading = ref(false)
-  const authen = useAuth()
   const router = useRouter()
 
   const handleFinish: FormProps['onFinish'] = values => {

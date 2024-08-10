@@ -1,9 +1,10 @@
 import { WalletAccount } from '@/interface/wallet.type'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
+import { defineStore } from 'pinia'
 
 type MainDbType = {}
 
-export const useAuth = () => {
+export const useAuth = defineStore('auth', () => {
   const mainDbName = 'hydrag-preprod'
   const walletCollection = 'wallets'
   const metadataCollection = 'metadata'
@@ -23,8 +24,6 @@ export const useAuth = () => {
 
   async function getWalletAccounts() {
     const rs = (await mainDb.value?.getAll(walletCollection)) as WalletAccount[]
-    console.log('>>> / file: useAuth.ts:28 / rs:', rs)
-
     walletAccounts.value = rs || []
   }
 
@@ -39,5 +38,10 @@ export const useAuth = () => {
   }
   init()
 
-  return { walletAccount, walletAccounts, setCurrentWallet, registerWalletAccount }
-}
+  return {
+    walletAccount,
+    walletAccounts,
+    setCurrentWallet,
+    registerWalletAccount
+  }
+})

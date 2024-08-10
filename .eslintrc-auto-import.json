@@ -295,6 +295,8 @@
     "useCopyContent": true,
     "usePopupState": true,
     "useWalletCore": true,
-    "useClipboardItems": true
+    "useClipboardItems": true,
+    "useAxios": true,
+    "useCopy": true
   }
 }
