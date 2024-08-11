@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { useAuth } from '@/composables/useAuth'
-  import { useCopyContent } from '@/composables/useCopy'
   import { WalletAccount } from '@/interface/wallet.type'
   import { message, type FormProps } from 'ant-design-vue'
 
@@ -82,7 +81,7 @@
                 <icon icon="ic:outline-account-circle" height="18" color="#4d4d4d" />
               </template>
               <template #suffix>
-                <icon icon="ic:outline-copy-all" height="16" class="hover:cursor-pointer" @click="useCopyContent(formCreate.accountName)" />
+                <icon icon="ic:outline-copy-all" height="16" class="hover:cursor-pointer" @click="useCopy(formCreate.accountName)" />
               </template>
             </a-input>
           </a-form-item>
@@ -93,7 +92,7 @@
                 <icon icon="ic:outline-account-balance-wallet" height="18" color="#4d4d4d" />
               </template>
               <template #suffix>
-                <icon icon="ic:outline-copy-all" height="16" class="hover:cursor-pointer" @click="useCopyContent(formCreate.enterpriseAddress)" />
+                <icon icon="ic:outline-copy-all" height="16" class="hover:cursor-pointer" @click="useCopy(formCreate.enterpriseAddress)" />
               </template>
             </a-input>
           </a-form-item>
@@ -101,7 +100,7 @@
             <template #label>
               <div class="flex items-center justify-between">
                 <span>Seed phrase</span>
-                <icon icon="ic:outline-copy-all" height="20" class="ml-2 hover:cursor-pointer" @click="useCopyContent(formCreate.mnemonic)" />
+                <icon icon="ic:outline-copy-all" height="20" class="ml-2 hover:cursor-pointer" @click="useCopy(formCreate.mnemonic)" />
               </div>
             </template>
             <p class="text-body-3 font-400 mb-2 text-left">Copy your seed phrase right now to avoid losing your account!</p>

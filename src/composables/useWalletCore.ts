@@ -102,6 +102,8 @@ export const useWalletCore = () => {
     }
   }
 
+  async function getBalance() {}
+
   return {
     getCip1852Account,
     generateMnemonic,
