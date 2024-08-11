@@ -1,12 +1,12 @@
 {
-  "name": "crm-aniawork",
+  "name": "cardano-hydrag-wallet",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --open --host",
-    "build": "vue-tsc && vite build",
-    "build-staging": "vue-tsc && vite build --mode staging",
+    "build": "vite build",
+    "build-staging": "vite build --mode staging",
     "preview": "vite preview"
   },
   "dependencies": {
