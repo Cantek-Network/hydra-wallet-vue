@@ -1,6 +1,11 @@
 <script setup lang="ts">
   import { formatId } from '@/utils/format'
+  import BaseSkeleton from '@/components/base/Skeleton.vue'
+  import { useCopy } from '@/utils/useCopy'
+
   const { walletAccount } = useAuth()
+  const walletCore = useWalletCore()
+  const isLoading = ref(false)
 
   const isShowQrCode = ref(false)
 
@@ -73,6 +78,7 @@
   onMounted(() => {
     //
     console.log('Home page mounted')
+    walletCore.test()
   })
 </script>
 
@@ -82,6 +88,9 @@
       <div class="flex h-full items-center justify-between px-4" border="b b-solid b-gray-3">
         <img src="/images/wallet-logo.png" alt="logo" class="w-36px h-36px object-contain" />
         <div class="flex items-center">
+          <!-- <div class="mr-2 flex rounded-full p-1 transition-all last:mr-0" hover="cursor-pointer bg-[#EBDEDC]">
+            <icon icon="tabler:plug-connected" height="20" />
+          </div> -->
           <div class="mr-2 flex rounded-full p-1 transition-all last:mr-0" hover="cursor-pointer bg-[#EBDEDC]" @click="isShowQrCode = true">
             <icon icon="ic:outline-qr-code" height="20" />
           </div>
@@ -103,9 +112,10 @@
               <icon icon="tabler:eye" height="20" />
             </div>
             <div class="mt-4 flex">
-              <a-button type="default" class="!rounded-3 !bg-primary btn-shadow-primary border-primary !h-10 !w-full text-white">Transfer</a-button>
+              <a-button type="default" class="!rounded-3 !bg-primary btn-shadow-primary border-primary !h-10 !w-full text-white">Send</a-button>
             </div>
           </div>
+          <!-- <base-skeleton type="text" :height="16" :loading="true" /> -->
         </div>
         <div class="mt-6">
           <a-tabs>

@@ -4,6 +4,7 @@
   import { message, type FormProps } from 'ant-design-vue'
 
   import { CHAIN } from '@/constants/chain'
+  import { useCopy } from '@/utils/useCopy'
 
   const walletCore = useWalletCore()
   const auth = useAuth()
