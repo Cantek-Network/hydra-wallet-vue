@@ -7,7 +7,7 @@
   import { useCopy } from '@/utils/useCopy'
 
   const walletCore = useWalletCore()
-  const auth = useAuth()
+  const auth = useAuthV2()
 
   const isBlur = ref(true)
   const formCreate = reactive({
@@ -25,32 +25,25 @@
     console.log(errors)
   }
 
-  function handleCreateAccount() {
+  async function handleCreateAccount() {
     try {
       loading.value = true
-      setTimeout(() => {
-        console.log('Create account')
-        loading.value = false
 
-        const wallet: WalletAccount = {
-          id: formCreate.accountName,
-          enterpriseAddress: formCreate.enterpriseAddress,
-          networkId: CHAIN,
-          rootKey: {
-            prv: '',
-            pub: '',
-            v: '1'
-          },
-          signType: 'mnemonic'
-        }
-        auth.registerWalletAccount(wallet)
-
-        message.success('Account created successfully!')
-      }, 0)
+      const rs = await walletCore.registerWallet({
+        name: formCreate.accountName,
+        mnemonic: formCreate.mnemonic,
+        passPhrase: 'test'
+      })
+      if (rs) {
+        message.success('Create account successfully')
+        auth.setCurrentWallet(rs)
+        router.push({ name: 'Home' })
+      }
     } catch (error) {
       console.error(error)
+      message.error('Something went wrong! Please try again later.')
     } finally {
-      //   loading.value = false
+      loading.value = false
     }
   }
 
@@ -62,6 +55,7 @@
     // generate wallet address
     formCreate.mnemonic = walletCore.generateMnemonic(160)
     formCreate.enterpriseAddress = walletCore.getEnterpriseAddressByMnemonic(formCreate.mnemonic).to_address().to_bech32()
+    formCreate.accountName = formCreate.enterpriseAddress
   })
 </script>
 
@@ -75,8 +69,8 @@
           </a-button>
         </div>
         <p class="text-title-1 font-700 mb-8 text-left leading-8">Create account</p>
-        <a-form layout="vertical" :model="formCreate" @finish="handleFinish" @finishFailed="handleFinishFailed">
-          <a-form-item label="Account name">
+        <a-form layout="vertical" :model="formCreate" @finish="handleFinish" @finishFailed="handleFinishFailed" class="form-create">
+          <!-- <a-form-item label="Account name">
             <a-input v-model:value="formCreate.accountName" placeholder="Your account name">
               <template #prefix>
                 <icon icon="ic:outline-account-circle" height="18" color="#4d4d4d" />
@@ -85,8 +79,8 @@
                 <icon icon="ic:outline-copy-all" height="16" class="hover:cursor-pointer" @click="useCopy(formCreate.accountName)" />
               </template>
             </a-input>
-          </a-form-item>
-          <a-form-item label="Address">
+          </a-form-item> -->
+          <a-form-item label="Address" s>
             <p class="text-body-2 font-400 mb-2 text-left">We have create a unique HYDRA address for you, which is similar to your telegram nickname.</p>
             <a-input v-model:value="formCreate.enterpriseAddress" placeholder="Wallet address" readonly>
               <template #prefix>
@@ -120,9 +114,16 @@
         </a-form>
       </div>
       <div class="w-full">
-        <a-button type="primary" class="!rounded-4 !h-[56px] w-full" size="large" @click="handleCreateAccount()" :loading="loading" :disabled="getDisabledCreateBtn"
-          >Create</a-button
+        <a-button
+          type="primary"
+          class="!rounded-4 !h-[56px] w-full"
+          size="large"
+          @click="handleCreateAccount()"
+          :loading="loading"
+          :disabled="getDisabledCreateBtn"
         >
+          Create
+        </a-button>
       </div>
     </div>
   </div>
@@ -134,6 +135,12 @@
       cursor: pointer;
       filter: blur(3px);
       transition: filter 0.3s;
+    }
+  }
+
+  .form-create {
+    :deep(.ant-form-item-label > label) {
+      font-size: 18px;
     }
   }
 </style>

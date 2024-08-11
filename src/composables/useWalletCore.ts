@@ -1,3 +1,4 @@
+import { WalletCore } from '@/interface/wallet.type'
 import * as CardanoWasm from '@emurgo/cardano-serialization-lib-browser'
 import axios from 'axios'
 
@@ -102,6 +103,24 @@ export const useWalletCore = () => {
     }
   }
 
+  type WalletRegister = {
+    name: string
+    mnemonic: string
+    passPhrase: string
+  }
+  async function registerWallet(wallet: WalletRegister) {
+    try {
+      const rs = await useAxios().post<WalletCore.WalletAccount>(`v2/wallets`, {
+        name: wallet.name,
+        mnemonic_sentence: wallet.mnemonic.split(' '),
+        passphrase: wallet.passPhrase
+      })
+      return rs.data
+    } catch (error) {
+      console.log('[Register Wallet] Error:', error)
+    }
+  }
+
   async function getBalance() {}
 
   return {
@@ -110,6 +129,7 @@ export const useWalletCore = () => {
     getEnterpriseAddress,
     getEnterpriseAddressByMnemonic,
     test,
-    createTransaction
+    createTransaction,
+    registerWallet
   }
 }

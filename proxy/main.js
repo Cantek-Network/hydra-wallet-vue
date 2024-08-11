@@ -12,13 +12,25 @@ app.use(
     origin: '*' // allow all
   })
 )
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {*} res
+ * @param {*} next
+ */
+function handler(req, res, next) {
+  console.log(req.path)
+  next()
+}
 
 // use proxy middleware
 app.use(
   '/',
+  handler,
   createProxyMiddleware({
-    target: 'http://103.149.170.54:8090',
-    changeOrigin: true
+    target: 'https://cardano-wallet-8090.hydrawallet.net',
+    changeOrigin: true,
+    logger: console
   })
 )
 app.listen(3002, () => {

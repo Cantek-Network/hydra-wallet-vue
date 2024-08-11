@@ -127,6 +127,7 @@ declare global {
   const useAsyncState: typeof import('@vueuse/core')['useAsyncState']
   const useAttrs: typeof import('vue')['useAttrs']
   const useAuth: typeof import('./composables/useAuth')['useAuth']
+  const useAuthV2: typeof import('./composables/useAuthV2')['useAuthV2']
   const useAxios: typeof import('./composables/useAxios')['useAxios']
   const useBase64: typeof import('@vueuse/core')['useBase64']
   const useBattery: typeof import('@vueuse/core')['useBattery']
@@ -423,6 +424,7 @@ declare module 'vue' {
     readonly useAsyncState: UnwrapRef<typeof import('@vueuse/core')['useAsyncState']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useAuth: UnwrapRef<typeof import('./composables/useAuth')['useAuth']>
+    readonly useAuthV2: UnwrapRef<typeof import('./composables/useAuthV2')['useAuthV2']>
     readonly useAxios: UnwrapRef<typeof import('./composables/useAxios')['useAxios']>
     readonly useBase64: UnwrapRef<typeof import('@vueuse/core')['useBase64']>
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>

@@ -297,6 +297,7 @@
     "useWalletCore": true,
     "useClipboardItems": true,
     "useAxios": true,
-    "useCopy": true
+    "useCopy": true,
+    "useAuthV2": true
   }
 }
