@@ -10,12 +10,13 @@ const routes: RouteRecordRaw[] = [
         name: 'Home',
         component: () => import(/* webpackChunkName: "home" */ '@modules/home/views/Home.vue'),
         beforeEnter: (to, from, next) => {
-          const { walletAccount } = useAuth()
-          console.log('Router: walletAccount:', walletAccount)
-          if (!walletAccount) {
+          const { currentWallet } = useAuthV2()
+          console.log('Router: walletAccount:', currentWallet)
+          if (!currentWallet) {
             console.log('redirect to auth')
             next({ name: 'Auth' })
           } else {
+            console.log('Next to home')
             next()
           }
         }

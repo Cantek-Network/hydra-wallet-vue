@@ -21,6 +21,7 @@
     "js-cookies": "^1.0.4",
     "lodash-es": "^4.17.21",
     "pinia": "^2.1.6",
+    "pinia-plugin-persist": "^1.0.0",
     "text-encoding": "^0.7.0",
     "util": "^0.12.5",
     "vite-plugin-top-level-await": "^1.4.1",

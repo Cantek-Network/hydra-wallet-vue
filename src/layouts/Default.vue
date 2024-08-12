@@ -6,16 +6,12 @@
     algorithm: antdTheme.defaultAlgorithm
   })
 
-  const { walletAccounts, walletAccount } = useAuth()
+  const { currentWallet } = useAuthV2()
   const router = useRouter()
 
   onBeforeMount(() => {
-    if (!walletAccount) {
-      if (walletAccounts.length) {
-        router.push({ name: 'AuthImport' })
-      } else {
-        router.push({ name: 'Auth' })
-      }
+    if (!currentWallet) {
+      router.push({ name: 'Auth' })
     }
   })
 </script>
