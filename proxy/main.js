@@ -23,16 +23,18 @@ function handler(req, res, next) {
   next()
 }
 
+const PORT = process.env.PORT || 3002
+
 // use proxy middleware
 app.use(
   '/',
   handler,
   createProxyMiddleware({
-    target: 'https://cardano-wallet-8090.hydrawallet.net',
+    target: process.env.CARDANO_NODE_PROXY_URL || 'https://cardano-wallet-8090.hydrawallet.net',
     changeOrigin: true,
     logger: console
   })
 )
-app.listen(3002, () => {
-  console.log('Proxy listening on port 3002')
+app.listen(PORT, () => {
+  console.log('Proxy listening on port:', PORT, ', target: ', process.env.CARDANO_NODE_PROXY_URL)
 })
