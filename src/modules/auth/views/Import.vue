@@ -12,7 +12,7 @@
     mnemonic: ''
   })
 
-  const { walletAccount, walletAccounts, setCurrentWallet } = useAuth()
+  const { currentWallet } = useAuthV2()
 
   const loading = ref(false)
   const authen = useAuth()
@@ -45,28 +45,11 @@
     if (form.mnemonic) {
       try {
         const walletAddress = useWalletCore().getEnterpriseAddressByMnemonic(form.mnemonic).to_address().to_bech32()
-        console.log('>>> / file: Import.vue:60 / walletAddress:', walletAddress)
-
-        // check if account exists
-        const existWalletAddess = walletAccounts.findIndex(el => el.enterpriseAddress === walletAddress)
-        if (existWalletAddess !== -1) {
-          setCurrentWallet(walletAccounts[existWalletAddess])
-        } else {
-          const wallet: WalletAccount = {
-            id: new Date().getTime().toString(),
-            enterpriseAddress: walletAddress,
-            networkId: CHAIN,
-            rootKey: {
-              prv: '',
-              pub: '',
-              v: '1'
-            },
-            signType: 'mnemonic'
-          }
-          setCurrentWallet(wallet)
+        if (walletAddress !== currentWallet?.name) {
+          message.error('Wallet is not exist', 2)
+          return
         }
-        console.log('Go to Home page')
-        router.replace({ name: 'Home' })
+        router.push({ name: 'Home' })
       } catch (error: any) {
         console.log(error.message)
         if (error.message === 'Invalid mnemonic') {
@@ -91,7 +74,9 @@
       </div>
       <div class="">
         <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
-        <a-button type="primary" class="!rounded-4 btn-secondary mt-4 !h-[56px] w-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">Continue</a-button>
+        <a-button type="primary" class="!rounded-4 btn-secondary mt-4 !h-[56px] w-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic"
+          >Continue</a-button
+        >
       </div>
     </div>
     <!-- <div class="flex h-full w-full flex-col" v-if="step === 'SELECT_ACCOUNT'">

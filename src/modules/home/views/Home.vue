@@ -2,8 +2,9 @@
   import { formatId } from '@/utils/format'
   import BaseSkeleton from '@/components/base/Skeleton.vue'
   import { useCopy } from '@/utils/useCopy'
+  import { message } from 'ant-design-vue'
 
-  const { walletAccount } = useAuth()
+  const { currentWallet, setCurrentWalletAddress } = useAuthV2()
   const walletCore = useWalletCore()
   const isLoading = ref(false)
 
@@ -75,15 +76,33 @@
     }
   ])
 
+  async function init() {
+    isLoading.value = true
+    if (!currentWallet) {
+      // handled by router
+      return
+    }
+    const walletDetail = await walletCore.getWalletById(currentWallet.id)
+    if (!walletDetail) {
+      // handled by router
+      message.error('Wallet not found')
+      return
+    }
+    setCurrentWalletAddress({
+      id: walletDetail.id,
+      address: walletDetail.name
+    })
+    isLoading.value = false
+  }
+
   onMounted(() => {
-    //
-    console.log('Home page mounted')
-    walletCore.test()
+    init()
+    console.log('INIT HOME')
   })
 </script>
 
 <template>
-  <div class="flex h-full w-full flex-col justify-between bg-[#fff]" v-if="walletAccount">
+  <div class="flex h-full w-full flex-col justify-between bg-[#fff]" v-if="currentWallet">
     <div class="h-[56px] flex-shrink-0 bg-[#fff]">
       <div class="flex h-full items-center justify-between px-4" border="b b-solid b-gray-3">
         <img src="/images/wallet-logo.png" alt="logo" class="w-36px h-36px object-contain" />
@@ -101,14 +120,15 @@
       </div>
       <div class="mt-4 px-4">
         <div class="text-body-1 font-500 flex items-center justify-center text-center">
-          {{ formatId(walletAccount.enterpriseAddress, 12, 12) }}
-          <icon icon="tabler:copy" height="24" class="ml-2 hover:cursor-pointer" @click="useCopy(walletAccount.enterpriseAddress)" />
+          {{ formatId(currentWallet.name, 12, 12) }}
+          <icon icon="tabler:copy" height="24" class="ml-2 hover:cursor-pointer" @click="useCopy(currentWallet.name)" />
         </div>
         <div class="mt-6">
           <div class="rounded-4 bg-white p-4" border="1 solid #c7bab8">
             <p class="text-body-2 font-500 mb-0">Total Balance</p>
             <div class="flex items-center justify-between">
-              <p class="text-title-2 font-700 mb-0">₳ 920.3</p>
+              <base-skeleton type="text" :height="24" :loading="true" v-if="isLoading" class="w-30" />
+              <p class="text-title-2 font-700 mb-0" v-else>₳ {{ currentWallet.balance.total.quantity }}</p>
               <icon icon="tabler:eye" height="20" />
             </div>
             <div class="mt-4 flex">
@@ -202,7 +222,7 @@
         <div class="text-left">
           <span class="text-body-1 font-400 text-gray-4">HYDRA address</span>
           <div class="text-body-1 text-gray-8 mt-1">
-            {{ formatId(walletAccount.enterpriseAddress, 10, 7) }}
+            {{ formatId(currentWallet.name, 10, 7) }}
             <!-- <span>
               <icon icon="ic:outline-copy-all" height="18" class="ml-2 hover:cursor-pointer" @click="useCopyContent('0x2F1Fe5a0BE48e1f7Ec0BC8beA6045985a0210C96')" />
             </span> -->
@@ -210,5 +230,8 @@
         </div>
       </div>
     </a-drawer>
+  </div>
+  <div class="" v-else>
+    <base-skeleton type="text" :height="16" :loading="true" />
   </div>
 </template>

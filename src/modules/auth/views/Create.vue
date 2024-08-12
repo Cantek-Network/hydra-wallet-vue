@@ -32,7 +32,7 @@
       const rs = await walletCore.registerWallet({
         name: formCreate.accountName,
         mnemonic: formCreate.mnemonic,
-        passPhrase: 'test'
+        passPhrase: 'hydrag-passphrase'
       })
       if (rs) {
         message.success('Create account successfully')

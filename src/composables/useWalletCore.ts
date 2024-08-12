@@ -1,7 +1,6 @@
 import { WalletCore } from '@/interface/wallet.type'
+import { $axios } from '@/utils/axios'
 import * as CardanoWasm from '@emurgo/cardano-serialization-lib-browser'
-import axios from 'axios'
-
 import { mnemonicToEntropy, generateMnemonic, entropyToMnemonic, getDefaultWordlist } from 'bip39'
 
 export const useWalletCore = () => {
@@ -46,42 +45,42 @@ export const useWalletCore = () => {
     return getEnterpriseAddress(account)
   }
 
-  async function test() {
-    console.log('useWalletCore::: test')
+  // async function test() {
+  //   console.log('useWalletCore::: test')
 
-    const mnemonicTest = 'dilemma habit spring keen patrol magic tide grass learn flavor glimpse bounce hockey reject ensure'
+  //   const mnemonicTest = 'dilemma habit spring keen patrol magic tide grass learn flavor glimpse bounce hockey reject ensure'
 
-    //
-    const cip1852Account = getCip1852Account(mnemonicTest)
-    const utxoPubKey = cip1852Account.derive(ChainDerivation.EXTERNAL).derive(0).to_public()
-    const stakeKey = cip1852Account.derive(ChainDerivation.CHIMERIC).derive(0).to_public()
+  //   //
+  //   const cip1852Account = getCip1852Account(mnemonicTest)
+  //   const utxoPubKey = cip1852Account.derive(ChainDerivation.EXTERNAL).derive(0).to_public()
+  //   const stakeKey = cip1852Account.derive(ChainDerivation.CHIMERIC).derive(0).to_public()
 
-    const baseAddr = CardanoWasm.BaseAddress.new(
-      0,
-      CardanoWasm.StakeCredential.from_keyhash(utxoPubKey.to_raw_key().hash()),
-      CardanoWasm.StakeCredential.from_keyhash(stakeKey.to_raw_key().hash())
-    )
+  //   const baseAddr = CardanoWasm.BaseAddress.new(
+  //     0,
+  //     CardanoWasm.StakeCredential.from_keyhash(utxoPubKey.to_raw_key().hash()),
+  //     CardanoWasm.StakeCredential.from_keyhash(stakeKey.to_raw_key().hash())
+  //   )
 
-    const address = baseAddr.to_address().to_bech32()
-    console.log('>>> / file: useWalletCore:50 / address:', address)
+  //   const address = baseAddr.to_address().to_bech32()
+  //   console.log('>>> / file: useWalletCore:50 / address:', address)
 
-    const network = CardanoWasm.NetworkInfo.mainnet()
-    console.log('>>> / file: useWalletCore:43 / network:', network.network_id())
+  //   const network = CardanoWasm.NetworkInfo.mainnet()
+  //   console.log('>>> / file: useWalletCore:43 / network:', network.network_id())
 
-    // init wallet server
-    try {
-      const cardanoNodeEndpoint = import.meta.env.VITE_APP_CARDANO_NODE_ENDPOINT
-      if (!cardanoNodeEndpoint) {
-        console.error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
-        throw new Error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
-      }
-      const response = await useAxios().get(`v2/wallets`)
-      console.log('>>> / file: useWalletCore:57 / response:', response)
-    } catch (error) {
-      console.error('>>> / file: useWalletCore:57 / error', error)
-    }
-  }
-  test()
+  //   // init wallet server
+  //   try {
+  //     const cardanoNodeEndpoint = import.meta.env.VITE_APP_CARDANO_NODE_ENDPOINT
+  //     if (!cardanoNodeEndpoint) {
+  //       console.error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
+  //       throw new Error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
+  //     }
+  //     const response = await $axios.get(`v2/wallets`)
+  //     console.log('>>> / file: useWalletCore:57 / response:', response)
+  //   } catch (error) {
+  //     console.error('>>> / file: useWalletCore:57 / error', error)
+  //   }
+  // }
+  // test()
 
   async function createTransaction() {
     try {
@@ -110,14 +109,23 @@ export const useWalletCore = () => {
   }
   async function registerWallet(wallet: WalletRegister) {
     try {
-      const rs = await useAxios().post<WalletCore.WalletAccount>(`v2/wallets`, {
+      const rs = (await $axios.post(`v2/wallets`, {
         name: wallet.name,
         mnemonic_sentence: wallet.mnemonic.split(' '),
         passphrase: wallet.passPhrase
-      })
-      return rs.data
+      })) as WalletCore.WalletAccount
+      return rs
     } catch (error) {
       console.log('[Register Wallet] Error:', error)
+    }
+  }
+
+  async function getWalletById(id: string) {
+    try {
+      const rs = (await $axios.get(`v2/wallets/${id}`)) as WalletCore.WalletAccount
+      return rs
+    } catch (error) {
+      console.log('[Get Wallet By Id] Error:', error)
     }
   }
 
@@ -128,8 +136,8 @@ export const useWalletCore = () => {
     generateMnemonic,
     getEnterpriseAddress,
     getEnterpriseAddressByMnemonic,
-    test,
     createTransaction,
-    registerWallet
+    registerWallet,
+    getWalletById
   }
 }

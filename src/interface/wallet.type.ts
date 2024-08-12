@@ -48,4 +48,9 @@ export namespace WalletCore {
       quantity: number
     }[]
   }
+
+  export type WalletAddress = {
+    id: string
+    address: string
+  }
 }
