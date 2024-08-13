@@ -6,7 +6,16 @@
     "parser": "@typescript-eslint/parser"
   },
   // "plugins": ["@typescript-eslint"],
-  "extends": ["plugin:vue/essential", "plugin:vue/recommended", "eslint:recommended", "@unocss", "@vue/typescript/recommended", "@vue/prettier", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "plugin:vue/essential",
+    "plugin:vue/recommended",
+    "eslint:recommended",
+    "@unocss",
+    "@vue/typescript/recommended",
+    "@vue/prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
     "vue/attribute-hyphenation": "warn",
     "vue/multi-word-component-names": "off",
@@ -21,12 +30,24 @@
     "@typescript-eslint/no-unused-vars": "warn",
     "vue/no-v-model-argument": "off",
     "no-var": 1,
+    "unused-imports/no-unused-vars": "warn",
+    "vue/eqeqeq": "off",
+    "node/prefer-global/process": "off",
+    "no-console": "off",
+    "vue/component-name-in-template-casing": "off",
+    "curly": "off",
+    "ts/consistent-type-definitions": "off",
+    "ts/ban-ts-comment": "off",
+    "ts/no-unsafe-assignment": "off",
+    "antfu/top-level-function": "off",
     "prettier/prettier": [
       "warn",
       {
         "endOfLine": "auto"
       },
-      { "usePrettierrc": true }
+      {
+        "usePrettierrc": true
+      }
     ]
   }
 }

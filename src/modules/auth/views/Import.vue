@@ -74,9 +74,9 @@
       </div>
       <div class="">
         <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
-        <a-button type="primary" class="!rounded-4 btn-secondary mt-4 !h-[56px] w-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic"
-          >Continue</a-button
-        >
+        <a-button type="primary" class="!rounded-4 btn-secondary mt-4 !h-[56px] w-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">
+          Continue
+        </a-button>
       </div>
     </div>
     <!-- <div class="flex h-full w-full flex-col" v-if="step === 'SELECT_ACCOUNT'">

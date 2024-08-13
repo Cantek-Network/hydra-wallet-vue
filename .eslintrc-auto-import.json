@@ -134,7 +134,6 @@
     "useAttrs": true,
     "useAuth": true,
     "useAuthV2": true,
-    "useAxios": true,
     "useBase64": true,
     "useBattery": true,
     "useBluetooth": true,

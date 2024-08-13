@@ -5,6 +5,7 @@
 
   import { CHAIN } from '@/constants/chain'
   import { useCopy } from '@/utils/useCopy'
+  import { FormInstance, Rule } from 'ant-design-vue/es/form'
 
   const walletCore = useWalletCore()
   const auth = useAuthV2()
@@ -13,8 +14,19 @@
   const formCreate = reactive({
     accountName: '',
     enterpriseAddress: '',
-    mnemonic: ''
+    mnemonic: '',
+    passPhrase: ''
   })
+  const rules: Record<keyof typeof formCreate, Rule[]> = {
+    accountName: [{ required: true, message: 'Please input your account name', trigger: 'blur' }],
+    enterpriseAddress: [{ required: true, message: 'Please input your enterprise address', trigger: 'blur' }],
+    mnemonic: [{ required: true, message: 'Please input your seed phrase', trigger: 'blur' }],
+    passPhrase: [
+      { required: true, message: 'Please input your password', trigger: 'blur' },
+      { min: 12, message: 'Password must be at least 12 characters', trigger: 'blur' }
+    ]
+  }
+  const formRef = ref<FormInstance | null>(null)
   const loading = ref(false)
   const router = useRouter()
 
@@ -27,12 +39,17 @@
 
   async function handleCreateAccount() {
     try {
+      await new Promise(resolve =>
+        formRef.value
+          ?.validate()
+          .then(resolve)
+          .catch(() => {})
+      )
       loading.value = true
-
       const rs = await walletCore.registerWallet({
         name: formCreate.accountName,
         mnemonic: formCreate.mnemonic,
-        passPhrase: 'hydrag-passphrase'
+        passPhrase: formCreate.passPhrase
       })
       if (rs) {
         message.success('Create account successfully')
@@ -69,18 +86,17 @@
           </a-button>
         </div>
         <p class="text-title-1 font-700 mb-8 text-left leading-8">Create account</p>
-        <a-form layout="vertical" :model="formCreate" @finish="handleFinish" @finishFailed="handleFinishFailed" class="form-create">
-          <!-- <a-form-item label="Account name">
-            <a-input v-model:value="formCreate.accountName" placeholder="Your account name">
-              <template #prefix>
-                <icon icon="ic:outline-account-circle" height="18" color="#4d4d4d" />
-              </template>
-              <template #suffix>
-                <icon icon="ic:outline-copy-all" height="16" class="hover:cursor-pointer" @click="useCopy(formCreate.accountName)" />
-              </template>
-            </a-input>
-          </a-form-item> -->
-          <a-form-item label="Address" s>
+        <a-form
+          layout="vertical"
+          ref="formRef"
+          hideRequiredMark
+          :model="formCreate"
+          :rules="rules"
+          @finish="handleFinish"
+          @finishFailed="handleFinishFailed"
+          class="form-create"
+        >
+          <a-form-item label="Address" name="enterpriseAddress">
             <p class="text-body-2 font-400 mb-2 text-left">We have create a unique HYDRA address for you, which is similar to your telegram nickname.</p>
             <a-input v-model:value="formCreate.enterpriseAddress" placeholder="Wallet address" readonly>
               <template #prefix>
@@ -91,7 +107,7 @@
               </template>
             </a-input>
           </a-form-item>
-          <a-form-item>
+          <a-form-item name="mnemonic">
             <template #label>
               <div class="flex items-center justify-between">
                 <span>Seed phrase</span>
@@ -110,6 +126,16 @@
                 :class="[isBlur && 'cursor-pointer']"
               />
             </div>
+          </a-form-item>
+          <a-form-item label="Password" name="passPhrase">
+            <p class="text-body-2 font-400 mb-2 text-left">
+              A strong password contains lower and upper case letters, numbers, special characters and is at least 12 characters long.
+            </p>
+            <a-input v-model:value="formCreate.passPhrase" placeholder="Password">
+              <template #prefix>
+                <icon icon="ic:outline-lock" height="18" color="#4d4d4d" />
+              </template>
+            </a-input>
           </a-form-item>
         </a-form>
       </div>
