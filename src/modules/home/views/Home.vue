@@ -214,19 +214,29 @@
     </div>
     <a-drawer v-model:open="isShowQrCode" class="rounded-t-3 !bg-[#fff]" root-class-name="root-class-name" placement="bottom" :closable="false" :height="300">
       <div class="flex justify-center">
-        <div class="rounded-2 p-1" border="1 solid #c7bab8">
+        <!-- <div class="rounded-2 p-1" border="1 solid #c7bab8">
           <img src="/images/examples/qrcode.jpg" alt="" class="h-40 w-40 rounded object-contain" />
-        </div>
+        </div> -->
+        <a-qrcode error-level="H" :value="currentWallet.name" icon="/logo-100x100.svg" />
       </div>
       <div class="mt-8 flex items-center">
-        <div class="text-left">
-          <span class="text-body-1 font-400 text-gray-4">HYDRA address</span>
+        <div class="flex-grow text-left">
+          <span class="text-body-1 font-400 text-gray-6">HYDRA address</span>
           <div class="text-body-1 text-gray-8 mt-1">
             {{ formatId(currentWallet.name, 10, 7) }}
             <!-- <span>
               <icon icon="ic:outline-copy-all" height="18" class="ml-2 hover:cursor-pointer" @click="useCopyContent('0x2F1Fe5a0BE48e1f7Ec0BC8beA6045985a0210C96')" />
             </span> -->
           </div>
+        </div>
+        <div class="flex-shrink-0">
+          <a-button
+            type="default"
+            class="!rounded-3 !bg-primary btn-shadow-primary border-primary flex !h-10 !w-full items-center text-white"
+            @click="useCopy(currentWallet.name)"
+          >
+            <icon icon="tabler:copy" height="18" class="mr-1" /> Copy
+          </a-button>
         </div>
       </div>
     </a-drawer>
