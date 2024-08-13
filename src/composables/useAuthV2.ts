@@ -17,10 +17,16 @@ export const useAuthV2 = defineStore(
       currentWalletAddress.value = address
     }
 
+    const reset = () => {
+      currentWallet.value = null
+      currentWalletAddress.value = null
+    }
+
     return {
       currentWallet,
       setCurrentWallet,
-      setCurrentWalletAddress
+      setCurrentWalletAddress,
+      reset
     }
   },
   {

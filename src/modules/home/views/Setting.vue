@@ -1,17 +1,18 @@
 <script setup lang="ts">
   import { formatId } from '@/utils/format'
 
-  const { currentWallet, setCurrentWalletAddress } = useAuthV2()
+  const { currentWallet, reset } = useAuthV2()
   const router = useRouter()
 
   function handleLogout() {
-    router.push({ name: 'auth' })
+    reset()
+    router.push({ name: 'Auth' })
   }
 
   onMounted(() => {
     console.log('currentWallet', currentWallet)
     if (!currentWallet) {
-      router.push({ name: 'auth' })
+      router.push({ name: 'Auth' })
     }
   })
 </script>
