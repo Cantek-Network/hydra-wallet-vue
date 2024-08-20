@@ -1,0 +1,51 @@
+{
+  "extends": ["@commitlint/config-conventional"],
+  "rules": {
+    "type-enum": [
+      2,
+      "always",
+      [
+        "build",
+        "chore",
+        "ci",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "refactor",
+        "revert",
+        "style",
+        "test",
+        "sample"
+      ]
+    ],
+    "scope-enum": [
+      1,
+      "always",
+      [
+        "base",
+        "packages",
+        "sample",
+        "testing",
+        "docs",
+        "config",
+        "plugins",
+        "page",
+        "helpers",
+        "apis",
+        "components",
+        "styles",
+        "assets",
+        "layouts",
+        "middleware",
+        "store",
+        "utils",
+        "hooks",
+        "types",
+        "constants",
+        "composables",
+        "logs"
+      ]
+    ]
+  }
+}
