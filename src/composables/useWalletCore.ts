@@ -20,14 +20,25 @@ export const useWalletCore = () => {
     CHIMERIC = 2 // from CIP1852
   }
 
+  function harden(num: number): number {
+    return 0x80000000 + num
+  }
+
   function getCip1852Account(mnemonic: string): CardanoWasm.Bip32PrivateKey {
-    const entropy = mnemonicToEntropy(mnemonic)
-    const rootKey = CardanoWasm.Bip32PrivateKey.from_bip39_entropy(Buffer.from(entropy, 'hex'), Buffer.from(''))
+    const rootKey = getRootKeyByMnemonic(mnemonic)
     return rootKey.derive(harden(Purpose.CIP1852)).derive(harden(CoinTypes.CARDANO)).derive(harden(0)) // account #0
   }
 
-  function harden(num: number): number {
-    return 0x80000000 + num
+  function getRootKeyByMnemonic(mnemonic: string): CardanoWasm.Bip32PrivateKey {
+    const entropy = mnemonicToEntropy(mnemonic)
+    const rootKey = CardanoWasm.Bip32PrivateKey.from_bip39_entropy(Buffer.from(entropy, 'hex'), Buffer.from(''))
+    return rootKey
+  }
+
+  function getPrivateKeyByMnemonic(mnemonic: string): CardanoWasm.Bip32PrivateKey {
+    const account = getCip1852Account(mnemonic)
+    const prvKey = account.derive(ChainDerivation.EXTERNAL).derive(0)
+    return prvKey
   }
 
   function getEnterpriseAddress(account: CardanoWasm.Bip32PrivateKey): CardanoWasm.BaseAddress {
@@ -131,13 +142,25 @@ export const useWalletCore = () => {
 
   async function getBalance() {}
 
+  async function getNetworkInfo() {
+    try {
+      const rs = (await $axios.get(`v2/network/information`)) as WalletCore.NetworkInfo
+      return rs
+    } catch (error) {
+      console.error('>>> / file: useWalletCore:43 / error:', error)
+    }
+  }
+
   return {
     getCip1852Account,
     generateMnemonic,
     getEnterpriseAddress,
     getEnterpriseAddressByMnemonic,
+    getPrivateKeyByMnemonic,
+    getRootKeyByMnemonic,
     createTransaction,
     registerWallet,
-    getWalletById
+    getWalletById,
+    getNetworkInfo
   }
 }

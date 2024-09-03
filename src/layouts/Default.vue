@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import type { ConfigProviderProps } from 'ant-design-vue/es'
   import { theme as antdTheme } from 'ant-design-vue'
+  import { assetTokens } from '@/constants/asset-tokens'
+  import { initListToken } from '@/utils/format'
 
   const theme = reactive({
     algorithm: antdTheme.defaultAlgorithm
@@ -8,6 +10,8 @@
 
   const { currentWallet } = useAuthV2()
   const router = useRouter()
+
+  initListToken(assetTokens, assetTokens)
 
   onBeforeMount(() => {
     if (!currentWallet) {

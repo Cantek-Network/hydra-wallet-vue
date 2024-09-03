@@ -1,15 +1,17 @@
 <script setup lang="ts">
   import { useAuth } from '@/composables/useAuth'
-  import { formatId } from '@/composables/useFormat'
-  import { CHAIN } from '@/constants/chain'
-  import { WalletAccount } from '@/interface/wallet.type'
+  import getRepository, { RepoName } from '@/repositories'
+  import { WalletRepository } from '@/repositories/wallet'
   import { message } from 'ant-design-vue'
 
   const steps = ['SEED_PHRASE', 'SELECT_ACCOUNT']
   const step = ref<'SEED_PHRASE' | 'SELECT_ACCOUNT'>('SEED_PHRASE')
 
+  const walletApi = getRepository(RepoName.Wallet) as WalletRepository
+
   const form = reactive({
-    mnemonic: ''
+    mnemonic: 'daughter silk uncover cheese split ribbon treat forum belt planet divert verify easily fabric shrimp',
+    passPhrase: 'hydrag'
   })
 
   const { currentWallet } = useAuthV2()
@@ -45,11 +47,26 @@
     if (form.mnemonic) {
       try {
         const walletAddress = useWalletCore().getEnterpriseAddressByMnemonic(form.mnemonic).to_address().to_bech32()
-        if (walletAddress !== currentWallet?.name) {
-          message.error('Wallet is not exist', 2)
+        console.log('>>> / file: Import.vue:38 / walletAddress:', walletAddress)
+        // const rootkey = useWalletCore().getCip1852Account(form.mnemonic).to_bech32()
+        // const prvKey = useWalletCore().getPrivateKeyByMnemonic(form.mnemonic)
+        // const pubKey = useWalletCore().getCip1852Account(form.mnemonic).to_public().to_bech32()
+        if (!form.passPhrase) {
+          message.error('Password is required', 2)
           return
         }
-        router.push({ name: 'Home' })
+        walletApi
+          .restoreWallet({
+            name: '',
+            mnemonic_sentence: form.mnemonic.split(' '),
+            passphrase: form.passPhrase
+          })
+          .then(rs => {
+            console.log('>>> / file: Import.vue:67 / rs:', rs)
+          })
+          .catch(err => {
+            console.log('>>> / file: Import.vue:69 / err:', err)
+          })
       } catch (error: any) {
         console.log(error.message)
         if (error.message === 'Invalid mnemonic') {
@@ -73,7 +90,16 @@
         <p class="text-body-1 font-700 text-left">Enter the backup passphrase associated with the account.</p>
       </div>
       <div class="">
-        <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
+        <a-form :model="form" layout="vertical">
+          <a-textarea v-model:value="form.mnemonic" placeholder="Seed phrase" :auto-size="{ minRows: 4, maxRows: 6 }" class="!rounded-4" />
+          <a-form-item label="Password" name="passPhrase" class="mt-4">
+            <a-input-password v-model:value="form.passPhrase" placeholder="Password" type="password">
+              <template #prefix>
+                <icon icon="ic:outline-lock" height="18" color="#4d4d4d" />
+              </template>
+            </a-input-password>
+          </a-form-item>
+        </a-form>
         <a-button type="primary" class="!rounded-4 btn-secondary mt-4 !h-[56px] w-full" size="large" :disabled="!form.mnemonic" @click="handleImportByMnemonic">
           Continue
         </a-button>

@@ -46,4 +46,4 @@ const cardanoNodeEndpoint = import.meta.env.VITE_APP_CARDANO_NODE_ENDPOINT
 if (!cardanoNodeEndpoint) {
   console.error('VITE_APP_CARDANO_NODE_ENDPOINT is not defined')
 }
-export const $axios = new AxiosInstance('api', import.meta.env.VITE_APP_CARDANO_NODE_ENDPOINT).instance
+export const $axios = new AxiosInstance('', import.meta.env.VITE_APP_CARDANO_NODE_ENDPOINT).instance

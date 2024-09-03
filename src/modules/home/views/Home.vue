@@ -1,12 +1,25 @@
 <script setup lang="ts">
-  import { formatId } from '@/utils/format'
+  import { formatId, convertAmountDecimal } from '@/utils/format'
   import BaseSkeleton from '@/components/base/Skeleton.vue'
   import { useCopy } from '@/utils/useCopy'
   import { message } from 'ant-design-vue'
+  import { WalletCore } from '@/interface/wallet.type'
+  import getRepository, { RepoName } from '@/repositories'
+  import { WalletRepository } from '@/repositories/wallet'
 
-  const { currentWallet, setCurrentWalletAddress } = useAuthV2()
+  const { currentWallet, setCurrentWalletAddress, setCurrentWallet } = useAuthV2()
   const walletCore = useWalletCore()
+  const walletApi = getRepository(RepoName.Wallet) as WalletRepository
   const isLoading = ref(false)
+
+  const isLoadingNetworkInfo = ref(false)
+  const nodeState = ref<WalletCore.SyncProgress>({
+    status: 'ready',
+    progress: {
+      quantity: 0,
+      unit: 'percent'
+    }
+  })
 
   const isShowQrCode = ref(false)
 
@@ -92,12 +105,42 @@
       id: walletDetail.id,
       address: walletDetail.name
     })
+    setCurrentWallet(walletDetail)
     isLoading.value = false
   }
+
+  const intervalNetworkInfo = useIntervalFn(() => {
+    isLoadingNetworkInfo.value = true
+    walletCore.getNetworkInfo().then(res => {
+      if (!res) {
+        console.warn('Network info not found')
+        return
+      }
+      isLoadingNetworkInfo.value = false
+      nodeState.value = res?.sync_progress
+    })
+    if (!currentWallet) {
+      return
+    }
+    walletCore.getWalletById(currentWallet.id).then(rs => {
+      console.log('>>> / file: Home.vue:123 / rs:', rs)
+
+      if (!rs) {
+        console.warn('Wallet not found')
+        return
+      }
+      setCurrentWallet(rs)
+      setCurrentWalletAddress({
+        id: rs.id,
+        address: rs.name
+      })
+    })
+  }, 10000)
 
   onMounted(() => {
     init()
     console.log('INIT HOME')
+    intervalNetworkInfo.resume()
   })
 </script>
 
@@ -106,6 +149,7 @@
     <div class="h-[56px] flex-shrink-0 bg-[#fff]">
       <div class="flex h-full items-center justify-between px-4" border="b b-solid b-gray-3">
         <img src="/images/wallet-logo.png" alt="logo" class="w-36px h-36px object-contain" />
+        <div class="text-xs">{{ nodeState.status === 'ready' ? 'Synced' : nodeState?.progress?.quantity || 100 + '%' }}</div>
         <div class="flex items-center">
           <!-- <div class="mr-2 flex rounded-full p-1 transition-all last:mr-0" hover="cursor-pointer bg-[#EBDEDC]">
             <icon icon="tabler:plug-connected" height="20" />
@@ -128,7 +172,7 @@
             <p class="text-body-2 font-500 mb-0">Total Balance</p>
             <div class="flex items-center justify-between">
               <base-skeleton type="text" :height="24" :loading="true" v-if="isLoading" class="w-30" />
-              <p class="text-title-2 font-700 mb-0" v-else>₳ {{ currentWallet.balance.total.quantity }}</p>
+              <p class="text-title-2 font-700 mb-0" v-else>₳ {{ (currentWallet.balance.total.quantity / 1e6).toFixed(2) }}</p>
               <icon icon="tabler:eye" height="20" />
             </div>
             <div class="mt-4 flex">

@@ -295,6 +295,11 @@
     "watchThrottled": true,
     "watchTriggerable": true,
     "watchWithFilter": true,
-    "whenever": true
+    "whenever": true,
+    "convertAmountDecimal": true,
+    "toFixedNumber": true,
+    "initListToken": true,
+    "truncateToDecimals": true,
+    "useWalletApi": true
   }
 }

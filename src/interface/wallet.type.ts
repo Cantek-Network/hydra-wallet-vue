@@ -53,4 +53,24 @@ export namespace WalletCore {
     id: string
     address: string
   }
+
+  export type NetworkInfo = {
+    sync_progress: SyncProgress
+    // network_tip: NetworkTip
+    // next_epoch: NextEpoch
+    node_era: string
+    network_info: {
+      protocol_magic: number
+      network_id: string
+    }
+    wallet_mode: string
+  }
+
+  export type SyncProgress = {
+    status: string
+    progress?: {
+      quantity: number
+      unit: string
+    }
+  }
 }

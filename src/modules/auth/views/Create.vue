@@ -8,6 +8,7 @@
   import { FormInstance, Rule } from 'ant-design-vue/es/form'
 
   const walletCore = useWalletCore()
+  const walletApi = useWalletApi()
   const auth = useAuthV2()
 
   const isBlur = ref(true)
@@ -46,14 +47,14 @@
           .catch(() => {})
       )
       loading.value = true
-      const rs = await walletCore.registerWallet({
+      const rs = await walletApi.restoreWallet({
         name: formCreate.accountName,
-        mnemonic: formCreate.mnemonic,
-        passPhrase: formCreate.passPhrase
+        mnemonic_sentence: formCreate.mnemonic.split(' '),
+        passphrase: formCreate.passPhrase
       })
       if (rs) {
         message.success('Create account successfully')
-        auth.setCurrentWallet(rs)
+        // auth.setCurrentWallet()
         router.push({ name: 'Home' })
       }
     } catch (error) {
